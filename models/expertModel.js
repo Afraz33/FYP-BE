@@ -10,11 +10,17 @@ const expertSchema = new mongoose.Schema({
   certifications: [String],
   city: String,
   languages: [String],
-  hourlyRate: Number,
+  hourlyRate: String,
   firstName: String,
   lastName: String,
-  userName: String,
-  email: String,
+  userName: {
+    type: String,
+    unique: true, // Make 'userName' field unique
+  },
+  email: {
+    type: String,
+    unique: true, // Make 'email' field unique
+  },
   phone: String,
   gender: String,
   password: String,
