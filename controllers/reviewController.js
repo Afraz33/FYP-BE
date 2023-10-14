@@ -21,7 +21,7 @@ const createReview = (req, res, next) => {
       // Handle any errors that occur during the review creation
       res.status(500).json({ Message: "Review Not Created", err: err });
     });
-
+  next();
   // Call the next middleware
 };
 
