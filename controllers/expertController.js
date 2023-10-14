@@ -1,6 +1,6 @@
 const experts = require("../models/expertModel");
 
-let expertSignup = (req, res) => {
+let expertSignup = (req, res, next) => {
   console.log("Afraz");
   let {
     password,
@@ -49,6 +49,7 @@ let expertSignup = (req, res) => {
     .catch((err) => {
       res.status(500).json({ Message: "Expert Not Created", err: err });
     });
+  next();
 };
 
 let expertLogin = (req, res) => {

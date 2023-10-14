@@ -8,6 +8,7 @@ const expertSchema = new mongoose.Schema({
   experience: [String],
   currentRole: String,
   certifications: [String],
+
   city: String,
   languages: [String],
   hourlyRate: String,
