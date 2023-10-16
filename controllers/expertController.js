@@ -21,6 +21,7 @@ let expertSignup = (req, res, next) => {
     languages,
     hourlyRate,
   } = req.body;
+  let sentimentScore = 0;
   // Usually, you would validate the user input here
   let expert = new experts({
     password, // Please hash this in production!
@@ -40,6 +41,7 @@ let expertSignup = (req, res, next) => {
     city,
     languages,
     hourlyRate,
+    sentimentScore,
   });
   expert
     .save()
