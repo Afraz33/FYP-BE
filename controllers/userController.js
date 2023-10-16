@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const ExpertModel = require('../models/expertModel'); 
 const jwt = require("jsonwebtoken");
 
 //user signup
@@ -7,12 +8,12 @@ let signup = (req, res) => {
     req.body;
 
   let user = new userModel({
-    password,
-    email,
-    gender,
     firstName,
     lastName,
     userName,
+    email,
+    password,
+    gender,
     phoneNo,
   });
 
@@ -55,6 +56,7 @@ let login = (req, res) => {
       res.status(500).json({ Message: "Login Failed", err: err });
     });
 };
+
 
 module.exports = {
   signup,
