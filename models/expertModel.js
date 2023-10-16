@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const expertSchema = new mongoose.Schema({
   description: String,
-  expertise: [String],
+  expertise: String,
   highestQualification: String,
   skills: [String],
   experience: [String],
@@ -25,6 +25,7 @@ const expertSchema = new mongoose.Schema({
   phone: String,
   gender: String,
   password: String,
+  sentimentScore: Number,
 });
 
 const Expert = mongoose.model("experts", expertSchema);
