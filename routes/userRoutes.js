@@ -19,27 +19,7 @@ userRoutes.post("/login", login);
 //   })
 // );
 
-// Create a review
-userRoutes.post("/reviews", async (req, res) => {
-  try {
-    const review = new Review(req.body);
-    await review.save();
-    res.status(201).json(review);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
 
-// Fetch reviews associated with a specific expert
-userRoutes.get("/reviews/:email", async (req, res) => {
-  try {
-    const expertEmail = req.params.email;
-    const reviews = await Review.find({ expertEmail });
-    res.status(200).json(reviews);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
 
 //middleware to decode user token
 let DecodeUser = (req, res, next) => {
