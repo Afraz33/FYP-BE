@@ -28,7 +28,7 @@ const expertSchema = new mongoose.Schema({
   sentimentScore: Number,
   calendlyLink: {
     type: String,
-    required: true,
+    required: true, 
   },
 });
 
