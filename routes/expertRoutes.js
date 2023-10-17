@@ -49,7 +49,7 @@ expertRoutes.get('/reviews/:email', async (req, res) => {
       res.json([]);  // No reviews found for the given expert email
     }
   } catch (error) {
-    console.error("Error fetching reviews:", error);
+    console.error("Error fetching reviews :", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
