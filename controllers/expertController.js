@@ -20,6 +20,7 @@ let expertSignup = (req, res, next) => {
     city,
     languages,
     hourlyRate,
+    calendlyLink,
   } = req.body;
   let sentimentScore = 0;
   // Usually, you would validate the user input here
@@ -42,6 +43,7 @@ let expertSignup = (req, res, next) => {
     languages,
     hourlyRate,
     sentimentScore,
+    calendlyLink,
   });
   expert
     .save()
@@ -102,4 +104,3 @@ module.exports = {
   getAllUsers,
   expertLogin,
 };
- 

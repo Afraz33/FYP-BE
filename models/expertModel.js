@@ -26,6 +26,10 @@ const expertSchema = new mongoose.Schema({
   gender: String,
   password: String,
   sentimentScore: Number,
+  calendlyLink: {
+    type: String,
+    required: true,
+  },
 });
 
 const Expert = mongoose.model("experts", expertSchema);
