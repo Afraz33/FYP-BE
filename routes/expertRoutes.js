@@ -27,6 +27,16 @@ expertRoutes.get(
   })
 );
 
+// Sort experts by sentiment score
+expertRoutes.get('/sort-by-sentiment', async (req, res) => {
+  try {
+    const experts = await ExpertModel.find().sort({ sentimentScore: -1 }); // Sort in descending order
+    res.json(experts);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch experts.' });
+  }
+});
+
 expertRoutes.get(
   "/:id",
   asyncHandler(async (req, res) => {
@@ -53,6 +63,7 @@ expertRoutes.get('/reviews/:email', async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 expertRoutes.put("/expert-updateCalendar", updateCalendar);
 
 module.exports = expertRoutes;
