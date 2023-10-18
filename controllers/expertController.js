@@ -1,8 +1,7 @@
 const experts = require("../models/expertModel");
 
-let expertSignup = (req, res, next) => {
-  console.log("Afraz");
-  let {
+const expertSignup = async (req, res, next) => {
+  const {
     password,
     email,
     gender,
@@ -23,36 +22,45 @@ let expertSignup = (req, res, next) => {
     calendlyLink,
   } = req.body;
   let sentimentScore = 0;
-  // Usually, you would validate the user input here
-  let expert = new experts({
-    password, // Please hash this in production!
-    email,
-    gender,
-    firstName,
-    lastName,
-    userName,
-    phone,
-    description,
-    expertise,
-    highestQualification,
-    skills,
-    experience,
-    currentRole,
-    certifications,
-    city,
-    languages,
-    hourlyRate,
-    sentimentScore,
-    calendlyLink,
-  });
-  expert
-    .save()
-    .then((savedExpert) => {
-      res.status(200).json({ Message: "Expert Created", expert: savedExpert });
-    })
-    .catch((err) => {
-      res.status(500).json({ Message: "Expert Not Created", err: err });
+  console.log(email);
+  try {
+    // Check if the email already exists in the database
+    const existingExpert = await experts.findOne({ email: email });
+
+    if (existingExpert) {
+      console.log(existingExpert);
+      return res.status(230).json({ Message: "Email already in use" });
+    }
+
+    // Email is not in use, create a new expert
+    const expert = new experts({
+      password, // Please hash this in production!
+      email,
+      gender,
+      firstName,
+      lastName,
+      userName,
+      phone,
+      description,
+      expertise,
+      highestQualification,
+      skills,
+      experience,
+      currentRole,
+      certifications,
+      city,
+      languages,
+      hourlyRate,
+      sentimentScore,
+      calendlyLink,
     });
+
+    const savedExpert = await expert.save();
+    res.status(200).json({ Message: "Expert Created", expert: savedExpert });
+  } catch (err) {
+    res.status(500).json({ Message: "Expert Not Created", error: err });
+  }
+
   next();
 };
 
