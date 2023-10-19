@@ -28,10 +28,21 @@ expertRoutes.get(
 );
 
 // Sort experts by sentiment score
-expertRoutes.get("/sort-by-sentiment", async (req, res) => {
+expertRoutes.get("/sort-by-sentiment/:field", async (req, res) => {
   try {
-    const experts = await ExpertModel.find().sort({ sentimentScore: -1 }); // Sort in descending order
-    res.json(experts);
+    const field = req.params.field;
+    const experts = await ExpertModel.find({ expertise: field }).sort({
+      sentimentScore: -1,
+    });
+
+    if (experts.length === 0) {
+      // No experts found in the specified field
+      return res
+        .status(404)
+        .json({ message: `No experts found in the field '${field}'` });
+    }
+
+    return res.status(200).json(experts);
   } catch (error) {
     res.status(500).send(error.message);
   }
