@@ -27,13 +27,30 @@ expertRoutes.get(
   })
 );
 
-// Sort experts by sentiment score
+// // Sort experts by sentiment score
+// expertRoutes.get('/sort-by-sentiment', async (req, res) => {
+//   try {
+//     const experts = await ExpertModel.find().sort({ sentimentScore: -1 }); // Sort in descending order
+//     res.json(experts);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to fetch experts.' });
+//   }
+// });
+// Example backend code
 expertRoutes.get('/sort-by-sentiment', async (req, res) => {
+  const { query } = req.query;
   try {
-    const experts = await ExpertModel.find().sort({ sentimentScore: -1 }); // Sort in descending order
+    let experts;
+    if (query) {
+      // If a query is provided, filter the experts by the query and sort by sentiment score
+      experts = await ExpertModel.find({ expertise: new RegExp(query, 'i') }).sort({ sentimentScore: -1 });
+    } else {
+      // If no query is provided, simply sort all experts by sentiment score
+      experts = await ExpertModel.find().sort({ sentimentScore: -1 });
+    }
     res.json(experts);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch experts.' });
+    res.status(500).send(error.message);
   }
 });
 
@@ -64,6 +81,15 @@ expertRoutes.get('/reviews/:email', async (req, res) => {
   }
 });
 
+// expertRoutes.get('/search', async (req, res) => {
+//   const { query } = req.query;
+//   try {
+//     const experts = await ExpertModel.find({ expertise: new RegExp(query, 'i') });
+//     res.json(experts);
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// });
 expertRoutes.put("/expert-updateCalendar", updateCalendar);
 
 module.exports = expertRoutes;
