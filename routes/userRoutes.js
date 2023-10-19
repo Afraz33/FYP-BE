@@ -7,19 +7,6 @@ const ExpertModel = require("../models/expertModel")
 //user routes
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", login);
-// userRoutes.get("/:id",
-//   asyncHandler(async (req, res) => {
-//     const expert = await ExpertModel.findById(req.params.id);
-//     if (expert) {
-//       res.json(expert);
-//     } else {
-//       res.status(404);
-//       throw new Error("Expert not Found");
-//     }
-//   })
-// );
-
-
 
 //middleware to decode user token
 let DecodeUser = (req, res, next) => {
