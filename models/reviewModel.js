@@ -15,12 +15,10 @@ const reviewSchema = new mongoose.Schema({
       comment: {
         type: String,
       },
-      // You can add more fields related to the review here
     },
   ],
 });
 
-// Create a model
 const Review = mongoose.model("Review", reviewSchema);
 
 module.exports = Review;

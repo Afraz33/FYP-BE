@@ -3,7 +3,7 @@ const {
   expertLogin,
   getAllUsers,
 } = require("../controllers/expertController");
-const { createReview } = require("../controllers/reviewController");
+const { addReviewForExpert } = require("../controllers/reviewController");
 const {
   createCalendar,
   updateCalendar,
@@ -15,7 +15,7 @@ const ExpertModel = require("../models/expertModel");
 const ReviewModel = require("../models/reviewModel");
 
 //Expert routes
-expertRoutes.post("/expertSignup", expertSignup, createReview, createCalendar);
+expertRoutes.post("/expertSignup", expertSignup, addReviewForExpert, createCalendar);
 expertRoutes.post("/expert-Login", expertLogin);
 
 expertRoutes.get(
@@ -74,6 +74,9 @@ expertRoutes.get("/reviews/:email", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// Route to add a review for an expert
+expertRoutes.post('/add-review', addReviewForExpert);
 
 // expertRoutes.get('/search', async (req, res) => {
 //   const { query } = req.query;
