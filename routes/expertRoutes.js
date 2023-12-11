@@ -3,7 +3,10 @@ const {
   expertLogin,
   getAllUsers,
 } = require("../controllers/expertController");
-const { addReviewForExpert } = require("../controllers/reviewController");
+const {
+  addReviewForExpert,
+  createReview,
+} = require("../controllers/reviewController");
 const {
   createCalendar,
   updateCalendar,
@@ -15,7 +18,7 @@ const ExpertModel = require("../models/expertModel");
 const ReviewModel = require("../models/reviewModel");
 
 //Expert routes
-expertRoutes.post("/expertSignup", expertSignup, addReviewForExpert, createCalendar);
+expertRoutes.post("/expertSignup", expertSignup, createReview, createCalendar);
 expertRoutes.post("/expert-Login", expertLogin);
 
 expertRoutes.get(
@@ -76,7 +79,7 @@ expertRoutes.get("/reviews/:email", async (req, res) => {
 });
 
 // Route to add a review for an expert
-expertRoutes.post('/add-review', addReviewForExpert);
+expertRoutes.post("/add-review", addReviewForExpert);
 
 // expertRoutes.get('/search', async (req, res) => {
 //   const { query } = req.query;

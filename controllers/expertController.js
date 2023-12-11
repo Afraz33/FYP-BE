@@ -57,11 +57,10 @@ const expertSignup = async (req, res, next) => {
 
     const savedExpert = await expert.save();
     res.status(200).json({ Message: "Expert Created", expert: savedExpert });
+    next();
   } catch (err) {
     res.status(500).json({ Message: "Expert Not Created", error: err });
   }
-
-  next();
 };
 
 let expertLogin = (req, res) => {
