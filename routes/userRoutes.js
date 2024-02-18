@@ -1,23 +1,21 @@
-const { signup, login, getExpertData } = require("../controllers/userController");
+const { signup, login, forgotPassword, resetPassword, checkEmail, checkUsername, updateUserProfile, getUserProfile, getExpertData, DecodeUser } = require("../controllers/userController");
 
 const jwt = require("jsonwebtoken");
 
 const userRoutes = require("express").Router();
 const ExpertModel = require("../models/expertModel")
+
 //user routes
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", login);
+userRoutes.post('/forgot-password', forgotPassword);
+userRoutes.post('/reset-password', resetPassword);
+userRoutes.post('/check-email', checkEmail);
+userRoutes.post('/check-username', checkUsername);
+userRoutes.get('/user-profile', getUserProfile);
+userRoutes.put('/user-profile',   updateUserProfile);
 
 //middleware to decode user token
-let DecodeUser = (req, res, next) => {
-  let token = req.headers.authorization.split(" ")[1];
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-    if (!err) {
-      req.decoded = decoded;
-      next();
-    } else {
-      res.status(403).json({ token: token, message: "Not Authorized" });
-    } 
-  });
-};
+
 module.exports = userRoutes;
+  
