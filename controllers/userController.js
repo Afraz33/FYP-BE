@@ -308,7 +308,7 @@ let updateUserProfile = async (req, res) => {
         decoded.id,
         {
           $set: {
-            userName: userName || decoded.userName,
+            userName: userName || decoded.userName,                                                                               
             phoneNo: phoneNo || decoded.phoneNo,
             password: password || decoded.password,
             email: email || decoded.email,
