@@ -10,7 +10,7 @@ userRoutes.post("/signup", signup);
 userRoutes.post("/login", login);
 userRoutes.post('/forgot-password', forgotPassword);
 userRoutes.post('/reset-password', resetPassword);
-userRoutes.post('/check-email', checkEmail);
+userRoutes.post('/check-email', checkEmail); 
 userRoutes.post('/check-username', checkUsername);
 userRoutes.get('/user-profile', getUserProfile);
 userRoutes.put('/user-profile',   updateUserProfile);
