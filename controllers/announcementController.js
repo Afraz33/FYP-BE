@@ -66,7 +66,12 @@ exports.deleteAnnouncement = async (req, res) => {
 
 exports.getAnnouncements = async (req, res) => {
   try {
-    const announcements = await Announcement.find().sort({ timestamp: -1 });
+    let announcements = await Announcement.find().sort({ timestamp: -1 });
+    // Convert universityName to uppercase
+    announcements = announcements.map(announcement => ({
+      ...announcement.toObject(),
+      universityName: announcement.universityName.toUpperCase(),
+    }));
     res.status(200).json(announcements);
   } catch (error) {
     console.error(error);
@@ -74,12 +79,15 @@ exports.getAnnouncements = async (req, res) => {
   }
 };
 
+
 exports.getAnnouncementsByUniversity = async (req, res) => {
   try {
     const universityName = req.params.university;
-    const announcements = await Announcement.find({ universityName: universityName });
+    // Ensure case sensitivity or other query criteria aren't causing issues
+    const announcements = await Announcement.find({ universityName: { $regex: universityName, $options: 'i' } });
 
-    if(!announcements.length) {
+    if (!announcements.length) {
+      // No announcements found for the university
       return res.status(404).json({ message: 'No announcements found for this university.' });
     }
 
@@ -88,6 +96,7 @@ exports.getAnnouncementsByUniversity = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 
 exports.fetchAnnouncements = async (req, res) => {
   try {
