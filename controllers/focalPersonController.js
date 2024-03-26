@@ -1,6 +1,7 @@
 // controllers/focalPersonController.js
 const FocalPerson = require('../models/focalPerson');
 const jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
 
 const secretKey = process.env.SECRET_KEY; // Change this to a secure secret key
 
@@ -11,41 +12,39 @@ exports.register = async (req, res) => {
     // Check if the universityName already exists
     const existingUser = await FocalPerson.findOne({ universityName });
     if (existingUser) {
-      return res.status(400).json({ error: 'Focal Person of the university already exists' });
+      return res.status(400).json({ error: 'Focal person for this university already exists' });
     }
 
     // Create a new user instance
-    const user = new FocalPerson({
+    const newUser = new FocalPerson({
       firstname,
       lastname,
       universityEmail,
       universityName,
-      password,
+      password, // Save the encrypted password
     });
 
     // Save the user to the database
-    await user.save();
+    await newUser.save();
 
     // Generate JWT token
-    const token = jwt.sign({ universityName: user.universityName }, secretKey, { expiresIn: '24h' });
+    const token = jwt.sign({ universityName: newUser.universityName }, secretKey, { expiresIn: '24h' });
 
     // Send the token in the response
     res.status(201).json({ token });
   } catch (error) {
     console.error('Error in registering user:', error);
 
-    // Check for specific database errors
-    if (error.name === 'MongoError' && error.code === 11000) {
+    // Handle specific database errors
+    if (error.code === 11000) {
       // Duplicate key error (e.g., unique field constraint violation)
-      return res.status(400).json({ error: 'University name or email already exists' });
+      return res.status(400).json({ error: 'Duplicate university found' });
     }
 
     // Send a generic error response
     res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
   }
 };
-
-
 
 // exports.login = async (req, res) => {
 //   try {
@@ -134,18 +133,22 @@ exports.editFocalPerson = async (req, res) => {
   }
 };
 
-
 exports.forgotPassword = async (req, res) => {
   const { universityEmail } = req.body;
 
   try {
+    // Find user by universityEmail
     const user = await FocalPerson.findOne({ universityEmail });
+
+    // If user not found, return 404 status
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Generate JWT token for password reset
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
+    // Configure nodemailer to send email
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -154,19 +157,26 @@ exports.forgotPassword = async (req, res) => {
       }
     });
 
+    // Prepare email content
     const mailOptions = {
       from: 'umamaqasim420@gmail.com',
-      to: universityEmail, // Correct variable name
+      to: universityEmail,
       subject: 'Reset Password',
       html: `<p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
             <p>Please click on the following link, or paste this into your browser to complete the process:</p>
-            <p><a href="http://localhost:3000/reset-password/${token}">Reset Password Link</a></p>
+            <p><a href="http://localhost:3000/reset-password-focal/${token}">Reset Password Link</a></p>
             <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>`,
     };
 
+    // Send email
     await transporter.sendMail(mailOptions);
+
+    // Return success message
     return res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
+    // Log the error for debugging
+    console.error('Error during forgot password:', error);
+    // Send a response with the error message
     return res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
@@ -185,8 +195,8 @@ exports.resetPassword = async (req, res) => {
     // Log the decoded token
     console.log('Decoded Token:', decoded);
 
-    // Find the user by ID
-    const user = await userModel.findById(decoded.userId);
+    // Find the user by ID using FocalPerson model
+    const user = await FocalPerson.findById(decoded.userId);
 
     // Log the found user
     console.log('Found User:', user);

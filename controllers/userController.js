@@ -58,17 +58,20 @@ let login = (req, res) => {
     });
 };
 
-let forgotPassword = async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
+    // Find user by email
     const user = await userModel.findOne({ email });
+
+    // If user not found, return 404 status
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Generate JWT token for password reset
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-    
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -79,20 +82,24 @@ let forgotPassword = async (req, res) => {
     });
     const mailOptions = {
       from: 'umamaqasim420@gmail.com',
-      to: email,
+      to: email, // Changed from email to universityEmail
       subject: 'Reset Password',
       html: `<p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
             <p>Please click on the following link, or paste this into your browser to complete the process:</p>
             <p><a href="http://localhost:3000/reset-password/${token}">Reset Password Link</a></p>
             <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>`,
     };
-
+    // Send email
     await transporter.sendMail(mailOptions);
+
+    // Return success message
     return res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
+    // Handle any errors
     return res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
+
 
 let resetPassword = async (req, res) => {
   try {
